@@ -1,6 +1,9 @@
 package hash.d;
 
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Solution {
     /**
@@ -50,9 +53,37 @@ public class Solution {
         // 3. 고유번호 낮은 순으로 수록
 
 
-        Map<String, List<String>> map = new HashMap<>();
-//        for
+        Map<String, Map<Integer, Integer>> map = new HashMap<>();
+        Map<String, Integer> count = new HashMap<>();
 
+        for(int i=0; i<genres.length; i++){
+            Map m = map.getOrDefault(genres[i], new HashMap<>());
+            m.put(i, plays[i]);
+            map.put(genres[i], m);
+
+            count.put(genres[i], count.getOrDefault(genres[i], 0) + plays[i]);
+        }
+        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(count.entrySet());
+        List result = new ArrayList();
+        entryList.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
+        // 소팅
+//        map.forEach( (k, m) -> {
+//          m.entrySet()
+//                  .stream()
+//                  .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+//        });
+        entryList.forEach(val -> {
+            Map m = map.get(val.getKey());
+            Stream a = m.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+            List l = (List) a.collect(Collectors.toList());
+
+//            result.add(l.get(0));
+//            if(l.size() > 1) result.add(l.indexOf(l.get(1)));
+        });
+        System.out.println(result);
 
 //
 //        // map에 곡 별 재생수 더해서 담기
