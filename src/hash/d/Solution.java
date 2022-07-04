@@ -1,9 +1,7 @@
 package hash.d;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Solution {
     /**
@@ -47,82 +45,135 @@ public class Solution {
      * 따라서 pop 장르의 [4, 1]번 노래를 먼저, classic 장르의 [3, 0]번 노래를 그다음에 수록합니다.
      */
     public int[] solution(String[] genres, int[] plays) {
-        int[] answer = {};
-        // 1. 재생수 높은 장르부터 수록
-        // 2. 장르내에서 재생수 높은 노래 수록
-        // 3. 고유번호 낮은 순으로 수록
+        int[] result = {};
+        // 장르별 2곡씩 추출
+        // 1. 재생수높은장르
+        // 2. 재생수높은노래
+        // 3. 인덱스낮은순
 
+        // 전체재생수높은장르추출
+        // 장르 - 인덱스 - 재생수
 
+        // 1. 장르별 재생수
+        Map<String, Integer> gMap = new HashMap();
+        // 2. 장르 -( 인덱스 - 재생수 )
         Map<String, Map<Integer, Integer>> map = new HashMap<>();
-        Map<String, Integer> count = new HashMap<>();
 
+        // 장르/재생수
         for(int i=0; i<genres.length; i++){
-            Map m = map.getOrDefault(genres[i], new HashMap<>());
+            // 장르별 전체재생수구하기
+            gMap.put(genres[i], gMap.getOrDefault(genres[i], 0) + plays[i]);
+            //
+            // ( 인덱스 - 재생수 ) 맵 생성
+            Map<Integer, Integer> m = map.getOrDefault(genres[i], new HashMap<>());
             m.put(i, plays[i]);
             map.put(genres[i], m);
-
-            count.put(genres[i], count.getOrDefault(genres[i], 0) + plays[i]);
         }
-        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(count.entrySet());
-        List result = new ArrayList();
-        entryList.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
-        // 소팅
-//        map.forEach( (k, m) -> {
-//          m.entrySet()
-//                  .stream()
-//                  .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-//        });
-        entryList.forEach(val -> {
-            Map m = map.get(val.getKey());
-            Stream a = m.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
-            List l = (List) a.collect(Collectors.toList());
+        List<Map.Entry<String, Integer>> gEntry = new LinkedList(gMap.entrySet());
+        gEntry.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
+        //
+        // 답
+        List<Integer> list = new ArrayList<>();
+        gEntry.stream().forEach( v-> {
+            // 재생수별 장르 루프
+            Map m = map.get(v.getKey());
+            List<Map.Entry<Integer, Integer>> entryList = new LinkedList<>(m.entrySet());
+            entryList.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
-//            result.add(l.get(0));
-//            if(l.size() > 1) result.add(l.indexOf(l.get(1)));
+            AtomicInteger i = new AtomicInteger();
+            entryList.stream().forEach(k ->{
+                System.out.println(k.getKey() + " " + k.getValue());
+                i.getAndIncrement();
+            });
         });
-        System.out.println(result);
-
+        result = Arrays.stream(list.toArray(new Integer[genres.length])).mapToInt(Integer::intValue).toArray();
+        return result;
+    }
+//    public int[] solution(String[] genres, int[] plays) {
+//        int[] answer = {};
+//        // 1. 재생수 높은 장르부터 수록
+//        // 2. 장르내에서 재생수 높은 노래 수록
+//        // 3. 고유번호 낮은 순으로 수록
 //
-//        // map에 곡 별 재생수 더해서 담기
-//        Map<String, Integer> map = new HashMap<>();
-//        Map<String, ArrayList<Integer>> data = new HashMap<>();
-//        Map<Integer, Integer> initNum = new HashMap<>();
 //
-//        for(int i=0; i<genres.length; i++) {
-//            map.put(genres[i], map.getOrDefault(genres[i], 0) + plays[i]);
-//            ArrayList list = data.getOrDefault(genres[i], new ArrayList());
-//            list.add(plays[i]);
-//            data.put(genres[i], list);
-//            // 고유번호
-//            initNum.put(i, plays[i]);
-//
+//        Map<String, Map<Integer, Integer>> map = new HashMap<>();
+//        Map<String, Integer> count = new HashMap<>();
+////        Map<Integer, Integer> index = new HashMap<>();
+//        List<Integer> index = new ArrayList<>();
+//        for(int i=0; i<genres.length; i++){
+//            // 맵에 플레이 회수를 담는다
+//            Map m = map.getOrDefault(genres[i], new HashMap<>());
+//            m.put(i, plays[i]);
+//            map.put(genres[i], m);
+//            // 인덱스 저장용
+//            index.add(i, plays[i]);
+//            count.put(genres[i], count.getOrDefault(genres[i], 0) + plays[i]);
 //        }
-//        // 가장 높은장르
-//        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(map.entrySet());
-//        // 고유번호 소팅
-//        List<Map.Entry<Integer, Integer>> entryNumList = new LinkedList<>(initNum.entrySet());
+//        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(count.entrySet());
+//        List result = new ArrayList();
+//        entryList.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 //
+//        // 소팅
+////        map.forEach( (k, m) -> {
+////          m.entrySet()
+////                  .stream()
+////                  .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+////        });
+//        entryList.forEach(val -> {
+//            Map m = map.get(val.getKey());
+//            Stream a = m.entrySet()
+//                    .stream()
+//                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 //
-//        entryList.sort(Map.Entry.comparingByValue()); // Entry에 값으로 소팅하는 메소드 사용
-//        entryList.forEach( (entry) -> {
-//            System.out.println(entry.getKey());
-//            List list = data.get(entry.getKey());
-//            Collections.sort(list, Collections.reverseOrder()); // 역순
-//            list.forEach( l -> {
-//                System.out.println(l);
-//                // 재생수 낮으면 높은거부터
+//            // 필요한 리스트
+//            a.forEach( k -> {
+//
 //            });
+////            result.add(l.get(0));
+////            if(l.size() > 1) result.add(l.indexOf(l.get(1)));
 //        });
 //
-//        System.out.println(map);
-//        System.out.println(data);
-//        System.out.println(Arrays.stream(map.values().toArray()).sorted());
+//        System.out.println(result);
 //
-
-
-        return answer;
-    }
+////
+////        // map에 곡 별 재생수 더해서 담기
+////        Map<String, Integer> map = new HashMap<>();
+////        Map<String, ArrayList<Integer>> data = new HashMap<>();
+////        Map<Integer, Integer> initNum = new HashMap<>();
+////
+////        for(int i=0; i<genres.length; i++) {
+////            map.put(genres[i], map.getOrDefault(genres[i], 0) + plays[i]);
+////            ArrayList list = data.getOrDefault(genres[i], new ArrayList());
+////            list.add(plays[i]);
+////            data.put(genres[i], list);
+////            // 고유번호
+////            initNum.put(i, plays[i]);
+////
+////        }
+////        // 가장 높은장르
+////        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(map.entrySet());
+////        // 고유번호 소팅
+////        List<Map.Entry<Integer, Integer>> entryNumList = new LinkedList<>(initNum.entrySet());
+////
+////
+////        entryList.sort(Map.Entry.comparingByValue()); // Entry에 값으로 소팅하는 메소드 사용
+////        entryList.forEach( (entry) -> {
+////            System.out.println(entry.getKey());
+////            List list = data.get(entry.getKey());
+////            Collections.sort(list, Collections.reverseOrder()); // 역순
+////            list.forEach( l -> {
+////                System.out.println(l);
+////                // 재생수 낮으면 높은거부터
+////            });
+////        });
+////
+////        System.out.println(map);
+////        System.out.println(data);
+////        System.out.println(Arrays.stream(map.values().toArray()).sorted());
+////
+//
+//
+//        return answer;
+//    }
 }
