@@ -1,5 +1,7 @@
 package hash.d;
 
+import java.util.Arrays;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -8,4 +10,7 @@ public class Main {
         int[] b = {500, 600, 500, 800, 2500};
         int[] result = s.solution(a,b);
     }
+
 }
+
+
