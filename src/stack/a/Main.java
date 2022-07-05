@@ -63,79 +63,40 @@ class Solution{
         // Queue : 선입선출
         // progress : 이미 처리된 작업양 (< 100)
         // speed : 작업의 속도 (1일) (<=100)
-        Queue<Integer> q = new LinkedList<>();
+            Queue<Integer> q = new LinkedList<>();
+            Queue<Integer> s = new LinkedList<>();
 
-        for(int i=0; i<progresses.length; i++){
-            int rest = 100 - progresses[i]; // 남은양
-            int restDate = rest % speeds[i] > 0 ? ( rest / speeds[i] ) + 1 : rest/speeds[i];
-            q.offer(restDate);
-        }
-        int count = 1;
-        List<Integer> result = new ArrayList<>();
-        while(!q.isEmpty()){
-            int tmp = q.poll();
-            if(q.peek()!=null){
-                if(tmp >= q.peek()) {
-                    count++;
-                }else{
-                    result.add(count);
-                    count=1;
+            for (int i = 0; i < progresses.length; i++) {
+                int rest = 100 - progresses[i]; // 남은양
+                int restDate = rest % speeds[i] > 0 ? (rest / speeds[i]) + 1 : rest / speeds[i];
+                q.offer(restDate);
+            }
+            int count = 1;
+            int top = 0;
+            while (!q.isEmpty()) {
+                int tmp = q.poll();
+                if (tmp > top) top = tmp;
+                if (q.peek() != null) {
+                    // 다음큐있음
+                    if (top >= q.peek()) {
+                        count++;
+                    } else {
+                        s.offer(count);
+                        count = 1;
+                    }
+                } else {
+                    // 마지막 큐
+                    s.offer(count);
                 }
-            }else{
-                result.add(count);
             }
-//            int tmp = q.poll();
-//            if(q.peek()==null) result.add(count);
-//            else{
-//                if(tmp >= q.peek()){
-//                    count++;
-//                }else{
-//                    result.add(count);
-//                    count=1;
-//                }
-//            }
-        }
 
-        int[] answer = new int[result.size()];
-        for (int i = 0; i < result.size() ; i++) {
-            answer[i] = result.get(i);
-        }
 
-        return answer;
-    }
-
-    class Node{
-        private boolean isDone;
-        private int initNum;
-        private int speed;
-        private int restDate;
-        Node next;
-
-        public Node(int initNum, int speed){
-            this.isDone = false;
-            this.initNum = initNum;
-            this.speed = speed;
-            this.calNumber();
-        }
-        boolean isDone(){
-            return this.isDone;
-        }
-        int getRestDate(){
-            return this.restDate;
-        }
-
-        private void calNumber(){
-            int rest = 100 - this.initNum;
-            if(rest <= 0) {
-                this.isDone = true;
-                this.restDate = 1;
-                return;
+            int[] answer = new int[s.size()];
+            for (int i = 0; i < answer.length; i++) {
+                answer[i] = s.poll();
             }
-            this.restDate = rest % speed > 0 ? ( rest / speed ) + 1 : rest/speed;
+
+            return answer;
         }
-        public String toString(){
-            return "isDone=" + this.isDone + ", initNum=" + this.initNum + ", restDate=" + this.restDate;
-        }
-    }
 }
 
