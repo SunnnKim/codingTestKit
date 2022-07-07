@@ -1,5 +1,7 @@
 package stack.b;
 
+import java.util.*;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -46,17 +48,49 @@ public class Main {
  *
  * 문제에 나온 예와 같습니다.
  * 예제 #2
- *
- * public private claas static string Stringfff ffasdmkasdlasd
- * asdkasdlasdasd
- * forEach(x -> System.out,println(x));
- * 한글은
  * 6개의 문서(A, B, C, D, E, F)가 인쇄 대기목록에 있고 중요도가 1 1 9 1 1 1 이므로 C D E F A B 순으로 인쇄합니다.
  */
-class Solution{
 
+
+class Solution {
     public int solution(int[] priorities, int location) {
-        int answer = 0;
+
+        int answer = 0 ;
+
+        Queue<Integer> q = new LinkedList<>();
+        PriorityQueue<Integer> sorted = new PriorityQueue<>(Collections.reverseOrder());
+        for(int i=0; i<priorities.length; i++){
+            // 모든 개체를 순서대로 큐에 넣는다
+            q.offer(priorities[i]);
+            sorted.add(priorities[i]); // 순서찾기
+        }
+
+        int index = 0; // 인쇄한 개수
+        int point = location; // 찾고자하는 노드의 위치
+        int top = sorted.poll();
+        while(!q.isEmpty()){
+            int now = q.poll();
+            if(point == 0){
+                // 현재위치 == 찾는위치
+                if(top > now) { // 우선순위 탈락
+                    q.add(now); // 넘긴다
+                    point = q.size() - 1;
+                }
+                else { // 뽑음
+                    answer = ++index;
+                    break;
+                }
+            }else{
+                // 현재위치 != 찾는위치
+                if(top > now){
+                    q.add(now);
+                }else{
+                    top = sorted.poll();
+                    index++;
+                }
+                point--;
+            }
+        }
         return answer;
     }
 }
