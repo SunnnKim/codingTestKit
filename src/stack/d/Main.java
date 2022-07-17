@@ -9,8 +9,7 @@ import java.util.*;
  * 제한사항
  * prices의 각 가격은 1 이상 10,000 이하인 자연수입니다.
  * prices의 길이는 2 이상 100,000 이하입니다.
- * 입출력 예
- * prices	return
+ * 입출력 예 * prices	return
  * [1, 2, 3, 2, 3]	[4, 3, 1, 1, 0]
  * 입출력 예 설명
  * 1초 시점의 ₩1은 끝까지 가격이 떨어지지 않았습니다.
@@ -35,7 +34,6 @@ class Solution {
         int now, hold = 0;
 
         for(int a : prices) q.add(a);
-
         while(!q.isEmpty()) {
             Iterator<Integer> i = q.iterator();
             now = i.next();
