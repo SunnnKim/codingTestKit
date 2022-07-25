@@ -36,13 +36,11 @@ public class Main {
 }
 class Solution{
     public String solution(int[] numbers) {
-        String answer = "";
         String[] s = new String[numbers.length];
         String max = String.valueOf(numbers[0]);
         for (int i = 0; i < numbers.length ; i++) {
             s[i] = String.valueOf(numbers[i]);
         }
-
         Arrays.sort(s, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
