@@ -1,4 +1,7 @@
 package bruthForth.b;
+
+import java.util.*;
+
 /*
 한자리 숫자가 적힌 종이 조각이 흩어져있습니다. 흩어진 종이 조각을 붙여 소수를 몇 개 만들 수 있는지 알아내려 합니다.
 
@@ -24,7 +27,7 @@ numbers	return
  */
 public class Main {
     public static void main(String[] args) {
-        String numbers = "17";
+        String numbers = "1231";
         Solution s = new Solution();
         int r = s.solution(numbers);
         System.out.println(r);
@@ -32,9 +35,39 @@ public class Main {
 }
 class Solution {
     public int solution(String numbers) {
-        int answer = 0;
         // 소수만들기
+        int answer = 0;
+        int[] array = new int[numbers.length()];
+        // 따로 떼어내기
+        int totalIndex = 0;
+        for (int i = 0; i < numbers.length(); i++) {
+            array[i] = Integer.valueOf(String.valueOf(numbers.charAt(i)));
+        }
+
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < array.length; i++) {
+            set.add(array[i]);
+            recursion(array, array[i], i, set);
+        }
+        System.out.println(set);
 
         return answer;
+    }
+    // 재귀함수
+    void recursion(int[] array, int num, int times, Set<Integer> set){
+        for (int i = 0; i < array.length; i++) {
+            if( i != times) {
+                set.add(num + array[i]);
+            recursion(array, (int)Math.pow(10, i+1) * array[times++], i, set);
+            }
+        }
+
+
+
+//        else{
+//            int a = array[times];
+//            set.add(a);
+//            recursion(array, a, ++times, set);
+//        }
     }
 }
