@@ -62,45 +62,31 @@ public class Main {
     }
 }
 class Solution {
+    boolean isChanged = false;
+
     public int solution(int[][] sizes) {
         int answer = 0;
-
-        int[] results = findMax(sizes);
-        int wMax = results[0];
-        int hMax = results[1];
-
-
+        int[] max = {0, 0};
 
         for (int i = 0; i < sizes.length; i++) {
-            if(sizes[i][0] == wMax && sizes[i][0] < hMax && sizes[i][1] < wMax) {
+            if(sizes[i][0] > sizes[i][1]){
                 int tmp = sizes[i][0];
                 sizes[i][0] = sizes[i][1];
                 sizes[i][1] = tmp;
-                int[] a= findMax(sizes);
-                wMax = a[0];
-                hMax = a[1];
-                i = -1;
             }
-            else if(sizes[i][1] == hMax && sizes[i][1] < wMax && sizes[i][0]<hMax) {
-                int tmp = sizes[i][0];
-                sizes[i][0] = sizes[i][1];
-                sizes[i][1] = tmp;
-                int[] a= findMax(sizes);
-                wMax = a[0];
-                hMax = a[1];
-                i=-1;
-            }
+            if(max[0] < sizes[i][0]) max[0] = sizes[i][0];
+            if(max[1] < sizes[i][1]) max[1] = sizes[i][1];
         }
-        return wMax * hMax;
+
+        return max[0] * max[1];
     }
 
-    int[] findMax(int[][] sizes){
-        int wMax = 0;
-        int hMax = 0;
+     void findMax(int[][] sizes, int[] max){
+        max[0] = 0;
+        max[1] = 0;
         for (int i = 0; i < sizes.length; i++) {
-            if(sizes[i][0] > wMax) wMax = sizes[i][0];
-            if(sizes[i][1] > hMax) hMax = sizes[i][1];
+            if(sizes[i][0] > max[0]) max[0] = sizes[i][0];
+            if(sizes[i][1] > max[1]) max[1] = sizes[i][1];
         }
-        return new int[]{wMax, hMax};
     }
 }
