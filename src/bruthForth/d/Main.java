@@ -1,5 +1,7 @@
 package bruthForth.d;
 
+import java.util.Arrays;
+
 /***
  * XX게임에는 피로도 시스템(0 이상의 정수로 표현합니다)이 있으며, 일정 피로도를 사용해서 던전을 탐험할 수 있습니다.
  * 이때, 각 던전마다 탐험을 시작하기 위해 필요한 "최소 필요 피로도"와 던전 탐험을 마쳤을 때 소모되는 "소모 피로도"가 있습니다.
@@ -58,15 +60,44 @@ public class Main {
     }
 }
 class Solution {
+    static int count = 0;
+    static boolean[][] check;
+
     public int solution(int k, int[][] dungeons) {
-        int answer = -1;
-//        boolean[][] check = new boolean[dungeons.length][]
-        for (int i = 0; i < dungeons.length ; i++) {
-            System.out.println(dungeons[i][0]);
+        int max = 0;
+        boolean[][] check;
+        int idx = 1;
+        for (int i = 1; i <= dungeons.length; i++) idx *= i;
+        check = new boolean[idx][dungeons.length];
+
+        for (int i = 0; i < idx ; i++) {
+            for (int j = 0; j < dungeons.length; j++) {
+                check[i][j] = true;
+                int tmp = 0;
+                System.out.println(dungeons[j][0]);
+                if(dungeons[j][0] >= k)  tmp = recursive(dungeons, k, check[i],1);
+//                System.out.println(tmp);
+            }
+//            count = 0;
+//            int tmp = recursive(dungeons, k, check[i],0);
+//            if(tmp > max) max = tmp;
+//            System.out.println("i = " + Arrays.toString(check[i]));
+
         }
-        return answer;
+        return max;
     }
-    void recursive(int[][] dungeons, int now, int next){
+    int recursive(int[][] dungeons, int k, boolean[] check, int total) {
+        for (int i = 0; i < dungeons.length; i++) {
+            if(!check[i]){
+//            System.out.println(dungeons[i][0]);
+                if(dungeons[i][0] <= k){
+                    check[i] = true;
+//                    System.out.println("i = " + Arrays.toString(check));
+                    return recursive(dungeons, k - dungeons[i][1], check, ++total);
+                }
+            }
+        }
+        return total;
 
     }
 }
