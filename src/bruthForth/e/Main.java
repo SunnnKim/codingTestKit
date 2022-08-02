@@ -1,4 +1,9 @@
 package bruthForth.e;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /*
 n개의 송전탑이 전선을 통해 하나의 트리 형태로 연결되어 있습니다.
 당신은 이 전선들 중 하나를 끊어서 현재의 전력망 네트워크를 2개로 분할하려고 합니다.
@@ -41,17 +46,61 @@ ex3.png
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        int n = 0;
+        int n = 9;
         int[][] w = {
-
+                {1, 3},
+                {2, 3},
+                {3, 4},
+                {4, 5},
+                {4, 6},
+                {4, 7},
+                {7, 8},
+                {7, 9}
         };
         int r = s.solution(n, w);
         System.out.println(r);
     }
 }
 class Solution {
+    int[][] arr;
     public int solution(int n, int[][] wires) {
-        int answer = -1;
+        int answer = n;
+        // 인접행렬 만들기
+        arr = new int[n+1][n+1];
+        for (int i = 0; i < wires.length; i++) {
+            arr[wires[i][0]][wires[i][1]]=1;
+            arr[wires[i][1]][wires[i][0]]=1;
+        }
+
+        for (int i = 0; i < wires.length; i++) {
+            arr[wires[i][0]][wires[i][1]] = 0;
+            arr[wires[i][1]][wires[i][0]] = 0;
+
+            answer = Math.min(answer, bfs(n, wires[i][0]));
+
+            arr[wires[i][0]][wires[i][1]] = 1;
+            arr[wires[i][1]][wires[i][0]] = 1;
+        }
+
         return answer;
+    }
+    int bfs(int n, int start) {
+        int cnt = 1;
+        Queue<Integer> q = new LinkedList<>();
+        int[] visit = new int[n+1];
+        q.offer(start);
+
+        while(!q.isEmpty()){
+            int point = q.poll();
+            visit[point] = 1;
+            for (int i = 1; i <= n; i++) {
+                if(visit[i] == 1) continue;
+                if(arr[point][i] == 1){
+                    q.offer(i);
+                    cnt++;
+                }
+            }
+        }
+        return Math.abs(n - 2 * cnt);
     }
 }
