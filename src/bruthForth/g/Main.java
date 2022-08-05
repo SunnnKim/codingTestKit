@@ -50,52 +50,16 @@ class Solution {
         // 1 2 3 4 5
         int answer = 0;
         String[] w = word.split("");
-        System.out.println(total);
-        fun(word);
-        System.out.println(count);
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < 5; i++) {
+            fun(word,i);
         }
 
         return answer;
     }
     // 시작단어, 지정글자, 자리수, 카운트
-    int fun(String word){
-        boolean b = false;
-        int idx = 0;
-        int point = 0;
-        String str = "";
-        boolean incline = true;
-        int length = 5; // 전체글자수
-        for(int k = 0; k < total; k ++){
-                // 첫 글자
-                for (int i = 0; i < length; i++) {
-                    if(str.equals(word)) return count;
-                    str += base[idx];
-                    count++;
-                    System.out.println(str);
-                }
-                // 하나씩빼기
-                for (int i = length - 1; i > 0 ; i--) {
-                    for (int j = 0; j < length; j++) {
-                        if(j == idx)continue;
-                        if(str.equals(word)) return count;
-                        str = str.substring(0, i);
-                        str+= base[j];
-                        System.out.println(str);
-                        count++;
-                    }
-                }
-                System.out.println("----------------------");
+    int fun(String word, int index){
 
-                idx = 0;
-                if(str.equals(word)){
-                    break;
-                }
-                if( count > total){
-                    break;
-                }
 
-        }
 
         return count;
     }
