@@ -30,14 +30,39 @@ name	return
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        String name = "";
+        String name = "AAAAAAABBBB"; //
         int r = s.solution(name);
         System.out.println(r);
     }
 }
 class Solution {
     public int solution(String name) {
-        int answer = 0;
-        return answer;
+        // A
+        // BCDEFGHIJKLM
+        // NOPQRSTUVWXYZ
+        int count = 0;
+        int index = 0; // 다음값 확인
+        int move = name.length() - 1; // 좌우 움직임(1번씩 움직였을 경우)
+        // 좌우
+
+        for (int i = 0; i < name.length(); i++) {
+            // 상하
+            count += countAlpabat(name.charAt(i));
+
+            index = i + 1; // 다음값 확인
+            // 다음 인덱스부터 연속되는 값이 A인 경우의 인덱스
+            while(index < name.length() && name.charAt(index) == 'A'){
+                index++;
+            }
+            // i -> 처음 -> index로 오는 케이스
+            move = Math.min(move, i * 2 + name.length() - index);
+            // BBBBAAAAAAAB
+            // i -> index -> 마지막 -> i 로 오는 케이스 (뒷부분부터입력하면 더 빠름)
+            move = Math.min(move, (name.length() - index) * 2 + i);
+        }
+        return count + move;
+    }
+    int countAlpabat(char c){
+        return Math.min(c - 'A', 'Z' - c + 1);
     }
 }
