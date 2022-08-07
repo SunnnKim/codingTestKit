@@ -1,4 +1,9 @@
 package greedy.a;
+
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /*
 점심시간에 도둑이 들어, 일부 학생이 체육복을 도난당했습니다.
 다행히 여벌 체육복이 있는 학생이 이들에게 체육복을 빌려주려 합니다.
@@ -33,9 +38,9 @@ n	lost	reserve	return
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        int n = 0;
-        int[] l = {};
-        int[] r = {};
+        int n = 30;
+        int[] l = { 1, 2, 7, 9, 10, 11, 12, 14, 15, 16, 18, 20, 21, 24, 25, 27};
+        int[] r = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 22, 23, 24, 25, 26, 27, 28 };
         int result = s.solution(n,l,r);
         System.out.println(result);
 
@@ -43,7 +48,46 @@ public class Main {
 }
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        int answer = 0;
-        return answer;
+        int count = n;
+        Arrays.sort(lost);
+        Arrays.sort(reserve);
+        List<Integer> reserveList = Arrays.stream(reserve).boxed().collect(Collectors.toList());
+        boolean[] checked = new boolean[n];
+        // 안가져온 학생 체크
+        for (int i = 0; i < lost.length; i++) {
+            // 자기 체육복이 있음
+            boolean hasExtra = false;
+            for (int j = 0; j < reserveList.size(); j++) {
+                if( lost[i] == reserveList.get(j)) {
+                    hasExtra = true;
+                    reserveList.remove(j);
+                    break;
+                }
+            }
+            if(!hasExtra) {
+                count--;
+                checked[lost[i]-1] = true;
+            }
+        }
+        System.out.println(Arrays.toString(checked));
+        for (int i = 1; i <= n; i++) {
+            // 체육복빌려주기
+            if(!checked[i-1]) continue;
+            for (int j = 0; j < reserveList.size(); j++) {
+                if(reserveList.get(j) == i - 1){
+                    checked[i-1] = false;
+                    reserveList.remove(j);
+                    count++;
+                }
+                else if( reserveList.get(j) == i + 1){
+                    checked[i-1] = false;
+                    reserveList.remove(j);
+                    count++;
+                }
+            }
+        }
+        System.out.println(Arrays.toString(checked));
+
+        return count;
     }
 }
