@@ -1,4 +1,9 @@
 package greedy.c;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /*
 어떤 숫자에서 k개의 수를 제거했을 때 얻을 수 있는 가장 큰 숫자를 구하려 합니다.
 
@@ -20,16 +25,36 @@ number	k	return
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        String n = "";
-        int k = 0;
+        String n = "1231234";
+        int k = 3;
         String r = s.solution(n,k);
-        System.out.println(r);
+        System.out.println(r); //3234
     }
 }
 
 class Solution {
     public String solution(String number, int k) {
         String answer = "";
+        // 보장되어야할 수
+
+        int length = number.length() - k;
+//        System.out.println(number.substring(len+1));
+        while(answer.length() < length){
+            int max = 0;
+            int index = 0;
+            int len = number.length() - k;
+            for (int i = 0; i < len - 1; i++) {
+                if(max < Character.getNumericValue(number.charAt(i))){
+                    max = Character.getNumericValue(number.charAt(i));
+                    index = i;
+                }
+            }
+            answer+=String.valueOf(max);
+            number = number.substring(index+1);
+            System.out.println(answer);
+            k--;
+        }
+
         return answer;
     }
 }
