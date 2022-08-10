@@ -1,6 +1,6 @@
 package stack.e;
 
-import java.util.Arrays;
+import java.util.*;
 
 /*
 배열 arr가 주어집니다. 배열 arr의 각 원소는 숫자 0부터 9까지로 이루어져 있습니다.
@@ -23,18 +23,26 @@ arr	answer
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] arr = {};
+        int[] arr = {1,1,3,3,0,1,1};
         int[] r = s.solution(arr);
         System.out.println(Arrays.toString(r));
     }
 }
 class Solution {
     public int[] solution(int []arr) {
-        int[] answer = {};
+        Queue<Integer> queue = new LinkedList<>();
+        List<Integer> list = new ArrayList<>();
+        for (int j : arr) {
+            if (queue.isEmpty()) queue.add(j);
+            else {
+                if (queue.peek() != j) {
+                    list.add(queue.poll());
+                    queue.add(j);
+                }
+            }
+        }
+        if(!queue.isEmpty()) list.add(queue.poll());
 
-        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
-        System.out.println("Hello Java");
-
-        return answer;
+        return list.stream().mapToInt(i->i).toArray();
     }
 }

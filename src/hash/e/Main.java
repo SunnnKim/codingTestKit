@@ -1,5 +1,8 @@
 package hash.e;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /*
 당신은 폰켓몬을 잡기 위한 오랜 여행 끝에, 홍 박사님의 연구실에 도착했습니다.
 홍 박사님은 당신에게 자신의 연구실에 있는 총 N 마리의 폰켓몬 중에서 N/2마리를 가져가도 좋다고 했습니다.
@@ -47,13 +50,23 @@ nums	result
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] num = {};
+        int[] num = {3,1,2,3};
         int r = s.solution(num);
+        System.out.println(r);
     }
 }
 class Solution {
     public int solution(int[] nums) {
         int answer = 0;
+        // 가져갈 수 있는 포켓몬 수
+        int pickable = nums.length / 2;
+        Set<Integer> type = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            type.add(nums[i]);
+        }
+        if(type.size() >= pickable) answer = pickable;
+        else answer = type.size();
+
         return answer;
     }
 }

@@ -20,10 +20,12 @@ s	answer
 "(()("	false
  */
 
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        String str = "";
+        String str = "())(";
         boolean b = s.solution(str);
         System.out.println(b);
     }
@@ -31,10 +33,28 @@ public class Main {
 class Solution {
     boolean solution(String s) {
         boolean answer = true;
+        int left = 0;
+        int right = 0;
+        boolean change = false;
+        Queue<Character> queue = new LinkedList<>();
 
-        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
-        System.out.println("Hello Java");
+        if(s.length() % 2 != 0) return false; // 짝 안맞는 경우
+        if(s.length() == 2) return s.equals("()"); // 2개인경우
+        if(s.charAt(0) == ')') return false;
 
-        return answer;
+        queue.offer(s.charAt(0));
+        // 그 외 케이스
+        for (int i = 1; i < s.length() ; i++) {
+            if(queue.isEmpty()){
+                if(s.charAt(i) == ')') return false;
+                else{
+                    queue.add(s.charAt(i));
+                }
+            }else{
+                if(s.charAt(i) == ')') queue.poll();
+                else queue.add(s.charAt(i));
+            }
+        }
+        return queue.isEmpty();
     }
 }
