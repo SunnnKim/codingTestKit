@@ -25,8 +25,10 @@ number	k	return
 public class Main {
     public static void main(String[] args) {
         Solution s = new Solution();
-        String n = "1231234";
-        int k = 3;
+        String n = "4177252841";
+//        String n = "1231234";
+        int k = 4;
+//        int k = 3;
         String r = s.solution(n,k);
         System.out.println(r); //3234
     }
@@ -35,26 +37,30 @@ public class Main {
 class Solution {
     public String solution(String number, int k) {
         String answer = "";
-        // 보장되어야할 수
+        StringBuilder sb = new StringBuilder();
 
-        int length = number.length() - k;
-//        System.out.println(number.substring(len+1));
-        while(answer.length() < length){
+        int pick = number.length() - k ; // 뽑아야하는수
+        while(pick>0){
             int max = 0;
             int index = 0;
-            int len = number.length() - k;
-            for (int i = 0; i < len - 1; i++) {
-                if(max < Character.getNumericValue(number.charAt(i))){
-                    max = Character.getNumericValue(number.charAt(i));
-                    index = i;
+            for (int i = 0; i < number.length()-pick+1; i++) {
+                int tmpNum = Character.getNumericValue(number.charAt(i));
+                if(tmpNum == 9){
+                    max = tmpNum;
+                    index=i;
+                    break;
+                }else{
+                    if (max < tmpNum) {
+                        max = tmpNum;
+                        index = i;
+                    }
                 }
-            }
-            answer+=String.valueOf(max);
-            number = number.substring(index+1);
-            System.out.println(answer);
-            k--;
-        }
 
-        return answer;
+            }
+            sb.append(String.valueOf(max));
+            number = number.substring(index + 1);
+            pick--;
+        }
+        return sb.toString();
     }
 }
