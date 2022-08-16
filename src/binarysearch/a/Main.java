@@ -1,4 +1,11 @@
 package binarysearch.a;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.PriorityQueue;
+
 /*
 n명이 입국심사를 위해 줄을 서서 기다리고 있습니다.
 각 입국심사대에 있는 심사관마다 심사하는데 걸리는 시간은 다릅니다.
@@ -29,8 +36,38 @@ n	times	return
 
 14분이 되었을 때, 첫 번째 심사대가 비고 5번째 사람이 심사를 받습니다.
 
-20분이 되었을 때, 두 번째 심사대가 비지만 6번째 사람이 그곳에서 심사를 받지 않고 1분을 더 기다린 후에
-첫 번째 심사대에서 심사를 받으면 28분에 모든 사람의 심사가 끝납니다.
+20분이 되었을 때, 두 번째 심사대가 비지만 6번째 사람이 그곳에서 심사를 받지 않고
+1분을 더 기다린 후에 첫 번째 심사대에서 심사를 받으면 28분에 모든 사람의 심사가 끝납니다.
+
  */
 public class Main {
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        int n = 6;
+        int[] t = {7,10};
+        long r = s.solution(n,t);
+        System.out.println(r);
+
+    }
+}
+class Solution {
+    public long solution(int n, int[] times) {
+        Arrays.sort(times);
+        long left = 1L; // 걸리는최소시간
+        long right = (long)(times[times.length-1] * n); // 걸리는최대시간
+        long answer = right;
+        while(left <= right){
+            long count = 0; // 지금까지 지난 사람
+            long mid = (right+left) / 2; // 중간지점
+            for (int time : times)  count += mid/time;
+            if(count < n) left = mid + 1; // count가 n보다 작으면 left 갱신
+            else {
+                if(mid < answer) {
+                    answer = mid;
+                } // 최대시간 바꿔주기
+                right = mid - 1; // right 값 갱신
+            }
+        }
+        return answer;
+    }
 }
