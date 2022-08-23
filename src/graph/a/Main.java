@@ -1,4 +1,10 @@
 package graph.a;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /*
 n개의 노드가 있는 그래프가 있습니다.
 각 노드는 1부터 n까지 번호가 적혀있습니다.
@@ -19,4 +25,54 @@ n	vertex	return
 예제의 그래프를 표현하면 아래 그림과 같고, 1번 노드에서 가장 멀리 떨어진 노드는 4,5,6번 노드입니다.
  */
 public class Main {
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        int n = 6;
+        int[][] v = {
+                {3, 6},
+                {4, 3},
+                {3, 2},
+                {1, 3},
+                {1, 2},
+                {2, 4},
+                {5, 2}
+        };
+        int r = s.solution(n,v);
+        System.out.println(r);
+    }
+}
+class Solution {
+    public int solution(int n, int[][] edge) {
+        Queue<Integer> q = new LinkedList<>();
+        boolean[][] graph = new boolean[n+1][n+1];
+
+        for (int i = 0; i < edge.length; i++) {
+            int r = edge[i][0];
+            int v = edge[i][1];
+            graph[r][v] = true;
+            graph[v][r] = true;
+        }
+        boolean[] visited = new boolean[n+1];
+        q.add(1);
+        visited[1] = true;
+        int size = 0;
+        while(!q.isEmpty()){
+           size = q.size();
+            for (int i = 0; i < size; i++) {
+                int node = q.poll();
+                for (int j = 1; j <= n; j++) {
+                    if(visited[j]) continue;
+                    if(graph[j][node]){
+                        q.add(j);
+                        visited[j] = true;
+                    }
+                }
+            }
+
+        }
+
+        return size;
+
+    }
+
 }
