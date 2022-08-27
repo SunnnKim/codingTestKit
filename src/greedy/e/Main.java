@@ -49,84 +49,38 @@ public class Main {
     }
 }
 class Solution {
-    int min = 0;
+    static int[] parent;
     public int solution(int n, int[][] costs) {
         int answer = 0;
-        int[][] g = new int[n][n];
-        for (int i = 0; i < costs.length; i++) {
-            g[costs[i][0]][costs[i][1]] = costs[i][2];
-            g[costs[i][1]][costs[i][0]] = costs[i][2];
+
+        // 크루스칼 알고리즘 사용
+        // 1. 간선의 가중치 중심으로 오름차순 정렬
+        Arrays.sort(costs, (int[] c1, int[] c2) -> c1[2]-c2[2]);
+        // 2. 부모노드 정리한 배열
+        parent = new int[n];
+        for (int i = 0; i < parent.length; i++) {
+            parent[i] = i; // 자기자신으로 초기화
+        }
+        int total = 0;
+        for (int[] edge : costs) {
+            int from = edge[0];
+            int to = edge[1];
+            int cost = edge[2];
+
+            // 간선의 부모노드를 찾는다
+            int fromParent = findParent(from);
+            int toParent = findParent(to);
+
+            // 같은 부모이면 순회되므로 넘기기
+            if(fromParent == toParent) continue;
+            total += cost;
+            parent[toParent] = fromParent; // 그래프 연결했으므로 toParent를 fromParent로 변경
         }
 
-        for (int i = 0; i < n; i++) {
-            boolean[] visited = new boolean[n];
-//            visited[i] = true;
-            int r = dfs(visited, g, 0);
-        System.out.println(min);
-        }
-
-
-
-        return min;
+        return total;
     }
-    int dfs(boolean[] visited, int[][] arr, int count){
-        int result = 0;
-        for (int i = 0; i < arr.length; i++) {
-            if(!visited[i]){
-                for (int j = 0; j < arr[i].length; j++) {
-                    if(arr[i][j] > 0){
-                        visited[i] = true;
-//                        count = count + arr[i][j];
-//                        System.out.println( count + arr[i][j]);
-                        System.out.println("i="+i+", count="+count);
-                        int tmp = dfs(visited, arr, count + arr[i][j]);
-                        System.out.println("result = " + result);
-                        if(result>0) result = Math.min(tmp, result);
-                        else result = tmp;
-                        visited[i] = false;
-                    }
-                }
-            }
-        }
-        return result;
+    int findParent(int node){
+        if(node == parent[node]) return node;
+        return parent[node] = findParent(parent[node]);
     }
-//    public int solution(int n, int[][] costs) {
-//        int answer = 0;
-//        int[][] g = new int[n][n];
-//        Queue<Integer> q = new LinkedList<>();
-//        int min = 0;
-//
-//        for (int i = 0; i < costs.length; i++) {
-//            g[costs[i][0]][costs[i][1]] = costs[i][2];
-//            g[costs[i][1]][costs[i][0]] = costs[i][2];
-//        }
-//        for (int i = 0; i < g.length; i++) {
-//            System.out.println(Arrays.toString(g[i]));
-//        }
-//        for (int k = 0; k < n; k++) {
-//            q.add(k);
-//            boolean[] visited = new boolean[n];
-//            visited[k] = true;
-//            int size = 0;
-//            int cost = 0;
-//
-//            while(!q.isEmpty()){
-//                size = q.size();
-//                for (int i = 0; i < size; i++) {
-//                    int node = q.poll();
-//                    for (int j = 0; j < g.length; j++) {
-//                        if(!visited[j] && g[j][node] > 0){
-//                            cost += g[j][node];
-//                            q.add(j);
-//                            visited[j] = true;
-//                        }
-//                    }
-//                }
-//            }
-//            if(min > 0) min = Math.min(min, cost);
-//            else min = cost;
-//        }
-//        return min;
-//    }
-
 }
