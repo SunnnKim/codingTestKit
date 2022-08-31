@@ -41,18 +41,49 @@ public class Main {
         System.out.println(r);
     }
 }
+// 그래프 간선의 최소값찾기
+// 플로이드-와셜 알고리즘 사용
+// 한 점에서 모든 점을 지나며 최솟값을 찾는 경우 사용
+// 시간복잡도 O(n^3)
+// for문 3번반복
+// a->b 로
 class Solution {
     public int solution(int n, int[][] results) {
         int answer = 0;
-        Arrays.sort(results, (int c1[], int c2[]) -> c1[0] - c2[0]);
-        Stack<Integer> s = new Stack<>();
-        s.add(results[0][1]);
-        boolean[] visited = new boolean[n];
+        int[][] graph = new int[n][n];
+        for (int i = 0; i < results.length; i++) {
+            // 4, 3
+            int a = results[i][0];
+            int b = results[i][1];
+            graph[a-1][b-1] = 1;
+            graph[b-1][a-1] = -1;
+        }
 
-        while(!s.isEmpty()){
+        // 이긴경우
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if(graph[i][j] == 0){
+                        if (graph[i][k] == 1 && graph[k][j] == 1){
+                            graph[i][j] = 1;
+                        }
+                        else if (graph[i][k] == -1 && graph[k][j] == -1){
+                            graph[i][j] = -1;
+                        }
+                    }
+                }
+            }
+        }
 
+        for (int i = 0; i < n; i++) {
+            int count = 0;
+            for (int j = 0; j < n; j++) {
+                if(graph[i][j]==0) count++;
+            }
+            if(count == 1) answer++;
         }
 
         return answer;
     }
+
 }
